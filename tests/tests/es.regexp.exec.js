@@ -61,6 +61,20 @@ if (DESCRIPTORS) {
     assert.strictEqual(re.exec(str), null, '#15');
     assert.strictEqual(re.lastIndex, 0, '#16');
   });
+
+  QUnit.test('RegExp#exec sticky with alternation', assert => {
+    const re = new RegExp('a|b+', 'y');
+    const str = 'bbabaab';
+
+    assert.deepEqual(re.exec(str), Object.assign(['bb'], { index: 0 }), '#1 - start of string');
+    assert.deepEqual(re.exec(str), ['a'], '#2 - first a');
+    assert.deepEqual(re.exec(str), Object.assign(['b'], { index: 3 }), '#3 - next b');
+    assert.deepEqual(re.exec(str), ['a'], '#4');
+    assert.deepEqual(re.exec(str), ['a'], '#5');
+    assert.deepEqual(re.exec(str), ['b'], '#6');
+    assert.deepEqual(re.exec(str), null, '#7');
+  });
+
   QUnit.test('RegExp#exec sticky anchored', assert => {
     const regex = new RegExp('^foo', 'y');
     assert.deepEqual(regex.exec('foo'), ['foo'], '#1');
